@@ -1,4 +1,5 @@
-# elasticsearch-2.3.6-chinese
+# An optimized Chinese version of Elastic Search
+
 
 ##优化的部分有
 *增加了词库生物化学方面的词库
@@ -13,9 +14,8 @@
     ├── config
     │   ├── bie-glossary.dic
     │   ├── custom
-    │   │   ├── bettbiotest.txt
     │   │   ├── ext_stopword.dic
-    │   │   ├── mydict.dic
+    │   │   ├── mydict.dic(*****)
     │   │   ├── single_word.dic
     │   │   ├── single_word_full.dic
     │   │   ├── single_word_low_freq.dic
@@ -34,10 +34,10 @@
     ├── httpcore-4.4.4.jar
     └── plugin-descriptor.properties
 
+```
 
-An optimized Chinese version of Elastic Search
 
-
+```
 curl -XDELETE http://localhost:9200/index
 curl -XPUT http://localhost:9200/index
 
