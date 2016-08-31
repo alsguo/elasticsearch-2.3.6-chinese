@@ -1,0 +1,115 @@
+
+curl -XDELETE http://localhost:9200/index
+curl -XPUT http://localhost:9200/index
+
+
+curl -XPOST http://localhost:9200/index/fulltext/_mapping -d'
+{
+    "fulltext": {
+             "_all": {
+            "analyzer": "ik_smart",
+            "search_analyzer": "ik_smart",
+            "term_vector": "no",
+            "store": "false"
+        },
+    "properties": {
+            "content": {
+                "type": "string",
+                "analyzer": "ik_smart",
+                "search_analyzer": "ik_smart",
+                "include_in_all": "true",
+                "boost": 8
+            },
+            "rank" : {"type" : "float"，  "boost":1}
+
+        }
+    }
+}'
+
+
+
+curl -XPOST http://localhost:9200/index/fulltext/1 -d'{"content":"NP-40 裂解液试剂盒使用 "}'
+curl -XPOST http://localhost:9200/index/fulltext/2 -d'{"content":"NP-40 裂解液"}'
+curl -XPOST http://localhost:9200/index/fulltext/3 -d'{"content":"NP-40 裂解液"}'
+curl -XPOST http://localhost:9200/index/fulltext/4 -d'{"content":"NP-40 裂解液试剂盒"}'
+curl -XPOST http://localhost:9200/index/fulltext/5 -d'{"content":"NP-40 试剂盒"}'
+curl -XPOST http://localhost:9200/index/fulltext/6 -d'{"content":"NP-40 使用"}'
+curl -XPOST http://localhost:9200/index/fulltext/7 -d'{"content":"裂解液试剂盒"}'
+curl -XPOST http://localhost:9200/index/fulltext/8 -d'{"content":"NP-40 "}'
+curl -XPOST http://localhost:9200/index/fulltext/9 -d'{"content":"裂解液"}'
+curl -XPOST http://localhost:9200/index/fulltext/10 -d'{"content":"NP-40"}'
+curl -XPOST http://localhost:9200/index/fulltext/11 -d'{"content":"NP-40"}'
+curl -XPOST http://localhost:9200/index/fulltext/12 -d'{"content":"试剂盒"}'
+
+
+
+curl -XPOST http://localhost:9200/index/fulltext/_search  -d'
+   { "query": { "match_all": {} }}
+'
+
+curl -XPOST http://localhost:9200/index/fulltext/_search  -d'
+{
+    "query" : { "term" : { "content" : "使用"}}
+}
+'
+curl -XPOST http://localhost:9200/index/fulltext/_search  -d'
+{
+    "query" : { "term" : { "content" : "裂解液"}}
+}
+'
+
+curl -XPOST http://localhost:9200/index/fulltext/_search  -d'
+{
+    "query" : { "term" : { "content" : "NP-40"}}
+}
+'
+
+curl -XPOST http://localhost:9200/index/fulltext/_search  -d'
+{
+    "query" : { "term" : { "content" : "NP-40 裂解液试剂盒使用"}}
+}
+'
+
+curl -XPOST http://localhost:9200/index/fulltext/_search  -d'
+{
+    "query" : { "term" : { "content" : "裂解液试剂盒使用"}}
+}
+'
+
+curl -XPOST http://localhost:9200/index/fulltext/_search?pretty   -d'
+{
+    "query": {
+        "match": {
+            "content": "裂解液"
+        }
+    }
+}'
+
+curl -XPOST http://localhost:9200/index/fulltext/_search?pretty   -d'
+{
+
+"sort": {
+        "_score": { "order": "desc" },
+        "rank": {
+            "unmapped_type": "float",
+            "order": "desc"
+        }
+    },
+
+    "query": {
+        "match": {
+            "content": "大鼠血管活性肠肽"
+        }
+    }
+}'
+
+ 
+
+
+curl -XPOST http://localhost:9200/index/fulltext/_search?pettry  -d'
+{
+    "query" : { "term" : { "content" : "使"}}
+}
+'
+
+curl -s -XPOST localhost:9200/index/fulltext/_bulk --data-binary "@/home/philip/fggit/elasticsearch-glossary/data/test-data-bulk.log"; echo
