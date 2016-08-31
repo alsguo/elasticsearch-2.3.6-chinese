@@ -6,7 +6,7 @@
 *改变默认设置，让其支持groov表达式以支持质量分加权排序
 ##增加词库
 
-优化的部分在
+优化的部分在elasticsearch-2.3.5/plugins下面
 ```
 └── ik
     ├── commons-codec-1.9.jar
