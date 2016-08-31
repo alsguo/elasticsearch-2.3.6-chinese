@@ -37,10 +37,12 @@
 ```
 
 
+##重建索引
 ```
 curl -XDELETE http://localhost:9200/index
 curl -XPUT http://localhost:9200/index
 
+//This is just an example
 
 curl -XPOST http://localhost:9200/index/fulltext/_mapping -d'
 {
@@ -64,4 +66,31 @@ curl -XPOST http://localhost:9200/index/fulltext/_mapping -d'
         }
     }
 }'
+```
+
+
+##修改查询
+```
+
+curl -XPOST http://localhost:9200/index/fulltext/_search?pretty   -d'
+{
+  "query": {
+
+    "function_score": {
+      "functions": [
+        {
+          "script_score": {
+          "lang":"groovy",
+            "script": "_score * (1+doc['"'"'rank'"'"'].value*0.1)"
+          }
+        }
+      ],
+      "query": {
+        "match": {
+            "content": "裂解液试剂盒使用"
+        }}
+    }
+  }
+}'
+
 ```
